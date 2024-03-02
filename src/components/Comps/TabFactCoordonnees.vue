@@ -21,16 +21,24 @@
           <td class="p-2">{{ item.SupplierName }}</td>
           <td class="p-2">{{ item.SupplierRC }}</td>
           <td class="p-2">
-            <BotonDetails @show-details="FactChoisi(item)" />
+            <BotonDetails @show-details="FactChoisi(item) "  />
           </td>
         </tr>
       </tbody>
     </table>
     </div>
+
   </div>
+  
+  <div>
+   <AfficheDetailsFact ref="detailsModal" :items="detailsfacture" />
+  </div>
+
+  
 </template>
 
 <script>
+import AfficheDetailsFact from './AfficheDetailsFact.vue';
 import BotonDetails from './BotonDetails.vue'; 
 
 export default {
@@ -38,7 +46,16 @@ export default {
   name: 'TabFactCoordonnees',
 
   components: {
-    BotonDetails 
+    BotonDetails,
+    AfficheDetailsFact 
+  },
+
+  
+  data() {
+    return {
+      detailsfacture: [],
+      showModal: false
+    };
   },
 
   props: {
@@ -53,7 +70,15 @@ export default {
     FactChoisi(item) {
       
       console.log('Détails de la facture:', item.InvoiceID);
+
+      this.detailsfacture = this.items.find(facture => facture.InvoiceID === item.InvoiceID);
+
+      console.log('Détails apres clique :', this.detailsfacture);
+
+      this.AfficheDetailsFact.show("modal-details");
+      //this.$refs.detailsModal.$bvModal.show();
       
+
     }
   }
 }

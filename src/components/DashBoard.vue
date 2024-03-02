@@ -34,7 +34,8 @@ export default {
 
   data() {
     return {
-      facturesdata: null
+      facturesdata: [],
+      factrechercher : null
     };
   },
 
@@ -51,9 +52,13 @@ export default {
     getitemlibelle(query) {
 
         console.log('item libelle rechercher:', query);
+       
+        this.facturesdata = this.facturesdata.filter(facture => {
+        return facture.InvoiceItems.some(item => item.ItemLibelle === query);
 
-        return this.facturesdata.parents.filter(parent => {
-        return parent.children.some(child => child.ItemLibelle === query);});
+      });
+
+      console.log('fonction contient item libelle :', this.facturesdata);
 
     },
 
