@@ -81,12 +81,25 @@ export default {
       
       this.detailsfacture = this.items.find(facture => facture.InvoiceID === item.InvoiceID);
       console.log('facture a imprimer :', this.detailsfacture);
+
+      let total = 0;
+      let totaltva = 0;
       
-      this.generatePDF(this.detailsfacture);
+
+      this.detailsfacture.InvoiceItems.forEach(item => {
+
+        total += item.ItemQuantity * item.ItemPrice;
+        totaltva += item.ItemQuantity * item.ItemTax;
+       
+      });
+
+      
+
+      this.generatePDF(this.detailsfacture,total , totaltva, total + totaltva );
 
     },
 
-    async generatePDF(donneesfacture) {
+    async generatePDF(donneesfacture, total, totaltva, totalprix) {
 
       const content = `
       <div style="margin-top: 50px; margin-left: 80px; margin-right: 80px;"> 
@@ -116,23 +129,23 @@ export default {
         <table style="width: 600px; margin: 0 auto;   " >
         <thead>
           <tr class="bg-yellow-200">
-            <th style="border: 1px solid black;">Num</th>
-            <th style="border: 1px solid black;">LIBELLE</th>
-            <th style="border: 1px solid black;">Quantite</th>
-            <th style="border: 1px solid black;">Prix</th>
-            <th style="border: 1px solid black;">HT</th>
-            <th style="border: 1px solid black;">TTC</th>
+            <th style="border: 1px solid black;vertical-align: middle;line-height: 50px;width: 40px;">Num</th>
+            <th style="border: 1px solid black;vertical-align: middle;line-height: 50px;width: 250px;">LIBELLE</th>
+            <th style="border: 1px solid black;vertical-align: middle;line-height: 50px;width: 80px;">Quantite</th>
+            <th style="border: 1px solid black;vertical-align: middle;line-height: 50px;width: 80px;">Prix</th>
+            <th style="border: 1px solid black;vertical-align: middle;line-height: 50px;width: 80px;">HT</th>
+            <th style="border: 1px solid black;vertical-align: middle;line-height: 50px;width: 200px;">TTC</th>
           </tr>
         </thead>
         <tbody>
           ${donneesfacture.InvoiceItems.map((item, index) => `
           <tr key="${index}" >
-            <td style="text-align: center;border: 1px solid black;">${item.ItemID}</td>
-            <td style="text-align: center;border: 1px solid black;">${item.ItemLibelle}</td>
-            <td style="text-align: center;border: 1px solid black;">${item.ItemQuantity}</td>
-            <td style="text-align: center;border: 1px solid black;">${item.ItemPrice}</td>
-            <td style="text-align: center;border: 1px solid black;">${item.ItemQuantity * item.ItemPrice}</td>
-            <td style="text-align: center; border: 1px solid black;">${item.ItemQuantity * item.ItemPrice - item.ItemTax * item.ItemQuantity}</td>
+            <td style="text-align: center;border: 1px solid black;vertical-align: middle;line-height: 50px;">${item.ItemID}</td>
+            <td style="text-align: center;border: 1px solid black;vertical-align: middle;line-height: 50px;">${item.ItemLibelle}</td>
+            <td style="text-align: center;border: 1px solid black;vertical-align: middle;line-height: 50px;">${item.ItemQuantity}</td>
+            <td style="text-align: center;border: 1px solid black;vertical-align: middle;line-height: 50px;">${item.ItemPrice}</td>
+            <td style="text-align: center;border: 1px solid black;vertical-align: middle;line-height: 50px;">${item.ItemQuantity * item.ItemPrice}</td>
+            <td style="text-align: center; border: 1px solid black;vertical-align: middle;line-height: 50px;">${item.ItemQuantity * item.ItemPrice - item.ItemTax * item.ItemQuantity}</td>
           </tr>
         `).join('')}
       </tbody>
@@ -140,24 +153,24 @@ export default {
 
      <br>
     
-     <table style=" margin-left: 70%; width: 150px;   ">
+     <table style=" margin-left: 50%; width: 300px;   ">
       <tbody>
         <tr>
-         <td style="text-align: center;border: 1px solid black;">TOTAL</td>
-         <td style="text-align: center;border: 1px solid black;">123654</td>
+         <td style="text-align: center;border: 1px solid black;vertical-align: middle;line-height: 50px;width: 200px; ">TOTAL</td>
+         <td style="text-align: center;border: 1px solid black;vertical-align: middle;line-height: 50px;width: 200px; height: 20px;">${total}</td>
         </tr>
         <tr>
-         <td style=" text-align: center;border: 1px solid black;">TVA</td>
-         <td style="text-align: center;border: 1px solid black;">145</td>
+         <td style=" text-align: center;border: 1px solid black;vertical-align: middle;line-height: 50px;width: 200px; ">TVA</td>
+         <td style="text-align: center;border: 1px solid black;vertical-align: middle;line-height: 50px;width: 200px; height: 20px;">${totaltva}</td>
         </tr>
         <tr>
-         <td style="font-weight: bold;text-align: center;border: 1px solid black;">TOTAL TTC</td>
-         <td style="text-align: center;border: 1px solid black;">12</td>
+         <td style="font-weight: bold;text-align: center;border: 1px solid black;vertical-align: middle;line-height: 50px;width: 200px; ">TOTAL TTC</td>
+         <td style="text-align: center;border: 1px solid black;vertical-align: middle;line-height: 50px;width: 200px;height: 20px;">${totalprix}</td>
         </tr>
       </tbody>
     </table>
 
-    <div style=" margin-left: 70%; margin-top: 40%;">
+    <div style=" margin-left: 70%; margin-top: 30%;">
     <p >LA SIGNATURE</p><br>
     </div>
 

@@ -1,7 +1,7 @@
 <template>
     <div>    
       <button @click="imprimer" >
-        <img src="@/assets/imprimericon.png" alt="Image du bouton" class="w-6 h-6">
+        <img src="@/assets/imprimericon.png" alt="Image du bouton" class="w-8 h-8">
       </button>
     </div>
   </template>
