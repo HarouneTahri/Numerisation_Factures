@@ -24,10 +24,12 @@
           <td class="p-2">
 
             <BotonDetails @show-details="FactDetailsChoisi(item)" @click="showDialog"  />
-
-            
-
-          </td>
+              <Dialog v-model="dialogVisible" header="Titre du dialogue" :closable="false">
+                  Contenu du dialogue...
+                <button @click="hideDialog">Fermer</button>
+              </Dialog>
+           
+         </td>
           <td class="p-2">
             <BotonImprimer @imprimer="FactImprimerChoisi(item) "  />
           </td>
@@ -46,6 +48,7 @@
 import BotonDetails from './BotonDetails.vue'; 
 import BotonImprimer from './BotonImprimer.vue';
 import html2pdf from 'html2pdf.js';
+import { Dialog } from 'primevue/dialog';
 
 export default {
 
@@ -54,6 +57,7 @@ export default {
   components: {
     BotonDetails,
     BotonImprimer,
+    Dialog
      
   },
 
@@ -61,6 +65,7 @@ export default {
   data() {
     return {
       detailsfacture: [],
+      dialogVisible: false
       
     };
   },
@@ -73,12 +78,15 @@ export default {
   },
 
   methods: {
-
     
-    openModalWithData() {
-    
-      this.modalVisible = true;    
+    showDialog() {
+      this.dialogVisible = true;
     },
+    hideDialog() {
+      this.dialogVisible = false;
+    },
+    
+    
 
     // fonction se declanche apres le clique sur le botton de detaille de facture ..
      // et puis recuperer les donnees de la facture selectionner ..

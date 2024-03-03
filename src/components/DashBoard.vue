@@ -34,6 +34,7 @@ export default {
   data() {
     return {
       facturesdata: [],
+      allfacturedata : [],
       factrechercher : null
     };
   },
@@ -48,8 +49,6 @@ export default {
 
   methods: {
 
-    
-
      // recupirer a chaque fois value (char) entré en temps reel .. 
      //pour filtrer les facture qui contient produit rechercher
 
@@ -59,8 +58,12 @@ export default {
       query = query.trim();
       
       if (query ) { 
-       
-          this.facturesdata = this.facturesdata.filter(facture => {
+
+        console.log('Item libelle recherché:', query);
+        // l'affectatio pour assurer en cas de suppression le filtrage .. 
+
+        this.facturesdata = this.allfacturedata;
+        this.facturesdata = this.facturesdata.filter(facture => {
           return facture.InvoiceItems.some(item => item.ItemLibelle.toLowerCase().includes(query.toLowerCase()));
 
         });
@@ -84,6 +87,7 @@ export default {
         }
         
         const data = await response.json();
+          this.allfacturedata = data;
           this.facturesdata = data;
       } catch (error) {
         console.error('Erreur :', error);
