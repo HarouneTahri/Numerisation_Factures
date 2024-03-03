@@ -4,8 +4,8 @@
   <div >
     <RechercheBarre @search-query="getitemlibelle"/>
   </div>
-  
-  <div class="text-left">
+  <br>  
+  <div class="text-center">
     <h1 class="text-3xl ml-4">Listes des factures  </h1>
   </div>
 

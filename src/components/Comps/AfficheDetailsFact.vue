@@ -1,41 +1,39 @@
 <template>
 
-  <b-modal id="modal-details" hide-header>
+  <b-modal ref="modal" title="Tableau de données">
       <div class="d-block">
     
-        <TabFactDetails :items="items"/>
+        <TabFactDetails :items="donneesfact"/>
           
       </div>
-      <div>
-        <BotonImprimer/>
-      </div>
-    </b-modal>
+      
+  </b-modal>
 
   </template>
   
   <script>
 import TabFactDetails from './TabFactDetails.vue';
-import BotonImprimer from './BotonImprimer.vue';
   export default {
 
     name: 'AfficheDetailsFact',
 
     components :{
          TabFactDetails , 
-         BotonImprimer
+         
       },
              
-    props: {
-      items: {
-        type: Array,
-        required: true
-      }
+    data() {
+     return {
+       donneesfact: []
+     };
     },
-
-    methods: {
-     
+  methods: {
+    openModal(data) {
+      this.donneesfact = data;
+      this.$refs.modal.show();
     }
-  }
+   }
+  };
   </script>
   
   <style scoped>

@@ -22,7 +22,13 @@
           <td class="p-2">{{ item.SupplierName }}</td>
           <td class="p-2">{{ item.SupplierRC }}</td>
           <td class="p-2">
-            <BotonDetails @show-details="FactDetailsChoisi(item) "  />
+
+            <BotonDetails @show-details="FactDetailsChoisi(item)" @click="openModalWithData"  />
+
+            <b-modal v-model="modalVisible" title="Titre du Modal">
+                <p>hello ! </p>
+            </b-modal>
+
           </td>
           <td class="p-2">
             <BotonImprimer @imprimer="FactImprimerChoisi(item) "  />
@@ -41,23 +47,23 @@
 <script>
 import BotonDetails from './BotonDetails.vue'; 
 import BotonImprimer from './BotonImprimer.vue';
-//import VueHtml2Pdf from 'vue-html2pdf';
 import html2pdf from 'html2pdf.js';
+
 export default {
 
   name: 'TabFactCoordonnees',
 
   components: {
     BotonDetails,
-    
-    BotonImprimer 
+    BotonImprimer
+     
   },
 
   
   data() {
     return {
       detailsfacture: [],
-      showModal: false
+      modalVisible: false,
     };
   },
 
@@ -70,12 +76,25 @@ export default {
 
   methods: {
 
-    FactDetailsChoisi(item) {
+   
+
+    openModalWithData() {
+    
+      this.modalVisible = true;    
+    },
+
+    // fonction se declanche apres le clique sur le botton de detaille de facture ..
+     // et puis recuperer les donnees de la facture selectionner ..
+
+     FactDetailsChoisi(item) {
       
       this.detailsfacture = this.items.find(facture => facture.InvoiceID === item.InvoiceID);
       console.log('Détails de facture choisi :', this.detailsfacture);
       
     },
+    // fonction se declanche apres le clique sur le botton de imprimer facture ..
+    // et puis recuperer les donnees de la facture selectionner.. 
+    // calculer le total et total de tva et total a payer et l'envoyer a la forme htmlgeneratePDF 
 
     FactImprimerChoisi(item) {
       
@@ -98,6 +117,9 @@ export default {
       this.generatePDF(this.detailsfacture,total , totaltva, total + totaltva );
 
     },
+
+
+    // fonction qui contient le forme de la facture html et apres elle sera convertir a PDF..
 
     async generatePDF(donneesfacture, total, totaltva, totalprix) {
 
@@ -178,13 +200,13 @@ export default {
   </div>
 `;
 
-
+  // les proprietés de pdf qu' on veut apres la convertion..
       const options = {
       filename: 'facture.pdf', 
       image: { type: 'jpeg', quality: 1.0 },
       jsPDF: { format: 'a4' } 
       };
-
+  // la convertion vers le PDF
       html2pdf().from(content).set(options).save();
   
     }
