@@ -41,8 +41,8 @@
 <script>
 import BotonDetails from './BotonDetails.vue'; 
 import BotonImprimer from './BotonImprimer.vue';
-import VueHtml2Pdf from 'vue-html2pdf';
-
+//import VueHtml2Pdf from 'vue-html2pdf';
+import html2pdf from 'html2pdf.js';
 export default {
 
   name: 'TabFactCoordonnees',
@@ -82,20 +82,98 @@ export default {
       this.detailsfacture = this.items.find(facture => facture.InvoiceID === item.InvoiceID);
       console.log('facture a imprimer :', this.detailsfacture);
       
+      this.generatePDF(this.detailsfacture);
 
     },
 
-    async generatePDF() {
-      // Création d'un objet de configuration pour le PDF
+    async generatePDF(donneesfacture) {
+
+      const content = `
+      <div style="margin-top: 50px; margin-left: 80px; margin-right: 80px;"> 
+
+      <h1  style="font-size: 24px; text-align: center; font-weight: bold;">Facture N : ${donneesfacture.InvoiceID}</h1><br>
+
+      <p style="position: absolute;  left: 60%;">Date de facture : ${donneesfacture.InvoiceDate}</p><br>
+      
+      
+        <div style="margin-top: 12%; margin-left: 5%; margin-right: 60%;" >
+          <p>Fournisseur</p>
+          <hr style="width: 100%; height: 2px; background-color: black; border: none; margin: 10px auto;">
+          <p style="font-size: 20px; font-weight: bold;">${donneesfacture.SupplierName}</p>
+          <p>${donneesfacture.SupplierPhone}</p>
+          <p>${donneesfacture.SupplierAddress}</p>
+        </div>
+      
+        <div  style="position: absolute; top: 230px; left: 500px;">
+          <p>Client</p>
+          <hr style="width: 100%; height: 2px; background-color: black; border: none; margin: 10px auto;">
+          <p style="font-size: 20px;  font-weight: bold;">${donneesfacture.ClientName}</p>
+          <p>${donneesfacture.ClientPhone}</p>
+          <p>${donneesfacture.SupplierAddress}</p>
+        </div>
+      <br><br>
+      <br><br>
+        <table style="width: 600px; margin: 0 auto;   " >
+        <thead>
+          <tr class="bg-yellow-200">
+            <th style="border: 1px solid black;">Num</th>
+            <th style="border: 1px solid black;">LIBELLE</th>
+            <th style="border: 1px solid black;">Quantite</th>
+            <th style="border: 1px solid black;">Prix</th>
+            <th style="border: 1px solid black;">HT</th>
+            <th style="border: 1px solid black;">TTC</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${donneesfacture.InvoiceItems.map((item, index) => `
+          <tr key="${index}" >
+            <td style="text-align: center;border: 1px solid black;">${item.ItemID}</td>
+            <td style="text-align: center;border: 1px solid black;">${item.ItemLibelle}</td>
+            <td style="text-align: center;border: 1px solid black;">${item.ItemQuantity}</td>
+            <td style="text-align: center;border: 1px solid black;">${item.ItemPrice}</td>
+            <td style="text-align: center;border: 1px solid black;">${item.ItemQuantity * item.ItemPrice}</td>
+            <td style="text-align: center; border: 1px solid black;">${item.ItemQuantity * item.ItemPrice - item.ItemTax * item.ItemQuantity}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+     </table>
+
+     <br>
+    
+     <table style=" margin-left: 70%; width: 150px;   ">
+      <tbody>
+        <tr>
+         <td style="text-align: center;border: 1px solid black;">TOTAL</td>
+         <td style="text-align: center;border: 1px solid black;">123654</td>
+        </tr>
+        <tr>
+         <td style=" text-align: center;border: 1px solid black;">TVA</td>
+         <td style="text-align: center;border: 1px solid black;">145</td>
+        </tr>
+        <tr>
+         <td style="font-weight: bold;text-align: center;border: 1px solid black;">TOTAL TTC</td>
+         <td style="text-align: center;border: 1px solid black;">12</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style=" margin-left: 70%; margin-top: 40%;">
+    <p >LA SIGNATURE</p><br>
+    </div>
+
+    </div>
+  </div>
+`;
+
+
       const options = {
-        filename: 'facture.pdf', // Nom du fichier PDF
-        image: { type: 'jpeg', quality: 0.98 }, // Type et qualité de l'image (optionnel)
-        html2canvas: {}, // Options pour html2canvas (optionnel)
-        jsPDF: {} // Options pour jsPDF (optionnel)
+      filename: 'facture.pdf', 
+      image: { type: 'jpeg', quality: 1.0 },
+      jsPDF: { format: 'a4' } 
       };
 
-      // Génération du PDF
-      await VueHtml2Pdf.save('<h1>Facture</h1><p>Contenu de la facture ici...</p>', options);
+      html2pdf().from(content).set(options).save();
+  
     }
 
   }
