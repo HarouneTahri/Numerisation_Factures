@@ -23,11 +23,9 @@
           <td class="p-2">{{ item.SupplierRC }}</td>
           <td class="p-2">
 
-            <BotonDetails @show-details="FactDetailsChoisi(item)" @click="openModalWithData"  />
+            <BotonDetails @show-details="FactDetailsChoisi(item)" @click="showDialog"  />
 
-            <b-modal v-model="modalVisible" title="Titre du Modal">
-                <p>hello ! </p>
-            </b-modal>
+            
 
           </td>
           <td class="p-2">
@@ -55,7 +53,7 @@ export default {
 
   components: {
     BotonDetails,
-    BotonImprimer
+    BotonImprimer,
      
   },
 
@@ -63,7 +61,7 @@ export default {
   data() {
     return {
       detailsfacture: [],
-      modalVisible: false,
+      
     };
   },
 
@@ -76,8 +74,7 @@ export default {
 
   methods: {
 
-   
-
+    
     openModalWithData() {
     
       this.modalVisible = true;    
