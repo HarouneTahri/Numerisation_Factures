@@ -1,5 +1,6 @@
 <template>
 
+    
   <b-modal ref="modal" title="Tableau de données">
       <div class="d-block">
     
@@ -8,6 +9,7 @@
       </div>
       
   </b-modal>
+
 
   </template>
   
@@ -32,6 +34,7 @@ import TabFactDetails from './TabFactDetails.vue';
       this.donneesfact = data;
       this.$refs.modal.show();
     }
+
    }
   };
   </script>

@@ -58,8 +58,6 @@ export default {
       query = query.trim();
       
       if (query ) { 
-
-        console.log('Item libelle recherché:', query);
         // l'affectatio pour assurer en cas de suppression le filtrage .. 
 
         this.facturesdata = this.allfacturedata;
@@ -69,9 +67,7 @@ export default {
         });
       }
        else{
-
-        this.getAllFactData();
-       
+        this.facturesdata = this.allfacturedata;
       }
 
     },
