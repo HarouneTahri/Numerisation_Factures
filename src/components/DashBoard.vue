@@ -13,8 +13,7 @@
     <TabFactCoordonnees :items="facturesdata"/>
   </div>
 
-  
-
+  <br><br><br>
 </template>
 
 <script>
@@ -49,19 +48,33 @@ export default {
 
   methods: {
 
+    
+
+     // recupirer a chaque fois value (char) entré en temps reel .. 
+     //pour filtrer les facture qui contient produit rechercher
+
     getitemlibelle(query) {
+      // supprimer les espaces debut et fin pour eviter les conflet ..
 
-        console.log('item libelle rechercher:', query);
+      query = query.trim();
+      
+      if (query ) { 
        
-        this.facturesdata = this.facturesdata.filter(facture => {
-        return facture.InvoiceItems.some(item => item.ItemLibelle === query);
+          this.facturesdata = this.facturesdata.filter(facture => {
+          return facture.InvoiceItems.some(item => item.ItemLibelle.toLowerCase().includes(query.toLowerCase()));
 
-      });
+        });
+      }
+       else{
 
-      console.log('fonction contient item libelle :', this.facturesdata);
+        this.getAllFactData();
+       
+      }
 
     },
 
+
+    // cette fonction pour retourner tout les donnees situées en l url ...
     async getAllFactData() {
       try {
 
